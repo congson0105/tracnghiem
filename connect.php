@@ -4,8 +4,9 @@ $username = "root";
 $password = "";
 
 try {
-  $conn = new PDO("mysql:host=$servername;dbname=tracnghiem", $username, $password);
+  $conn = new PDO("mysql:host=$servername;dbname=tracnghiem;port=3306", $username, $password);
   // set the PDO error mode to exception
+
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {

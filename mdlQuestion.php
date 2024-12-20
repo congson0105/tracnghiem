@@ -8,6 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="txtQuestionId" value="">
                 <div class="form-group">
 
                     <textarea class="form-control" id="txaQuestion" rows="1" placeholder="Câu hỏi"></textarea>
@@ -85,35 +86,58 @@
             alert('Vui lòng chọn đáp án đúng');
             return 0;
         }
-        $.ajax({
-            url: 'add_question.php',
-            type: 'post',
-            data: {
-                question: question,// bên trái là tên thuộc tính, bên phải là giá trị <--> tên biến bên trên
-                option_a: option_a,
-                option_b: option_b,
-                option_c: option_c,
-                option_d: option_d,
-                answer: answer
-            },
-            success: function (data) {
+        let questionId = $('#txtQuestionId').val();
+        if (questionId.length == 0) { // them moi cau hoi
+            $.ajax({
+                url: 'add_question.php',
+                type: 'post',
+                data: {
+                    question: question,// bên trái là tên thuộc tính, bên phải là giá trị <--> tên biến bên trên
+                    option_a: option_a,
+                    option_b: option_b,
+                    option_c: option_c,
+                    option_d: option_d,
+                    answer: answer
+                },
+                success: function (data) {
 
-                alert(data);
-                // reset lại giá trị của các texarea
-                $('#txaQuestion').val('');
-                $('#txaQuestionA').val('');
-                $('#txaQuestionB').val('');
-                $('#txaQuestionC').val('');
-                $('#txaQuestionD').val('');
-                // reset lị gia tri cho cac radio button -->khong chon thang nao het
-                $('#rdOptionA').prop('checkd', false);
-                $('#rdOptionB').prop('checkd', false);
-                $('#rdOptionC').prop('checkd', false);
-                $('#rdOptionD').prop('checkd', false);
+                    alert(data);
+                    // reset lại giá trị của các texarea
+                    $('#txaQuestion').val('');
+                    $('#txaQuestionA').val('');
+                    $('#txaQuestionB').val('');
+                    $('#txaQuestionC').val('');
+                    $('#txaQuestionD').val('');
+                    // reset lị gia tri cho cac radio button -->khong chon thang nao het
+                    $('#rdOptionA').prop('checkd', false);
+                    $('#rdOptionB').prop('checkd', false);
+                    $('#rdOptionC').prop('checkd', false);
+                    $('#rdOptionD').prop('checkd', false);
 
-            }
-        });
+                    $('#btnSearch').click();
+                }
+            });
+        } else { // cập nhập cau hoi
+            $.ajax({
+                url: 'update.php',
+                type: 'post',
+                data: {
+                    id: questionId,
+                    question: question,// bên trái là tên thuộc tính, bên phải là giá trị <--> tên biến bên trên
+                    option_a: option_a,
+                    option_b: option_b,
+                    option_c: option_c,
+                    option_d: option_d,
+                    answer: answer
+                },
+                success: function (data) {
+                    alert(data);
+                    $('$modalQuestion').modal('hide'); // ẩn modal sau khi update
+                    $('#btnSearch').click();
+                }
+            });
 
+        }
     });
 
 </script>
