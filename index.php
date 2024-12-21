@@ -42,11 +42,9 @@
       <!-- Phần phân trang -->
       <div class="col-sm-6">
         <nav aria-label="Page navigation example">
-          <ul class="pagination" style="margin:0px; padding-top:0; margin-left:10px">
+          <ul class="pagination" style="margin:0px; padding-top:0; margin-left:10px;" id="pagination">
 
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+
 
           </ul>
         </nav>
@@ -80,6 +78,7 @@
 </html>
 <?php include('mdlQuestion.php') ?>
 <script type="text/javascript">
+  var page = 1;
   // trong sự kiện trang load xong thì gọi tới hàm load ds câu hỏi
   $(document).ready(function () {
     $('#btnSearch').click();
@@ -107,6 +106,7 @@
   $('#btnSearch').click(function () {
     let search = $('#txtSearch').val().trim();
     ReadData(search);
+    Pagination(search);
   });
 
 
@@ -215,7 +215,8 @@
       url: 'view.php',
       type: 'get',
       data: {
-        search: search
+        search: search,
+        page: page
       },
       success: function (data) {
         $('#questions').empty();
@@ -231,4 +232,35 @@
     }
   });
 
+  $("#pagination").on("click", "li a", function (event) {
+    event.preventDefault();
+    page = $(this).text();
+    ReadData($(txtSearch).val());
+  });
+
+
+
+  function Pagination(search) {
+    $.ajax({
+      url: 'pagination.php',
+      type: 'get',
+      data: {
+        search: search
+      },
+      success: function (data) {
+        console.log(data);
+        if (data <= 1) {
+          $('#pagination').hide();
+        } else {
+          $('#pagination').show();
+          $('#pagination').empty();
+          let pagi = '';
+          for (i = 1; i <= data; i++) {
+            pagi += '<li class="page-item" ><a class="page-link" href="#">' + i + '</a></li>';
+          }
+          $('#pagination').append(pagi);
+        }
+      }
+    });
+  }
 </script>

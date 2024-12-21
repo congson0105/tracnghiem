@@ -1,8 +1,16 @@
 <?php
 include('connect.php');
 
-$search = $_GET['search'];
-$sql = $conn->prepare("SELECT * FROM cauhoi where question like '%" . $search . "%'");
+$search = '';
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+}
+
+$page = 1;
+if (isset($_GET["page"])) {
+    $page = (int) $_GET['page'];
+}
+$sql = $conn->prepare("SELECT * FROM cauhoi where question like '%" . $search . "%' limit 5 offset " . ($page - 1) * 5);
 $sql->execute();
 $index = 1;
 $data = '';
